@@ -17,6 +17,7 @@ test_points = [
     (-16.442181, 46.543468, 100),
 ]
 
+
 @pytest.mark.parametrize("lat, lon, distance", test_points)
 def test_latlon_consts(lat, lon, distance):
     lat_const, lon_const = get_latlon_constants(distance, lat)
