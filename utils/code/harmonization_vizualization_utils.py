@@ -49,6 +49,117 @@ harmonized_ceo = {
     "CEO_Water": "#00B7F2",
 }
 
+worldcover_legend = {
+    "Trees": "#006400",
+    "Shrubland": "#ffbb22",
+    "Grassland": "#ffff4c",
+    "Cropland": "#f096ff",
+    "Built-up": "#fa0000",
+    "Barren / Sparse Vegetation": "#b4b4b4",
+    "Open Water": "#0064c8",
+    "Herbaceous Wetland": "#0096a0",
+    "Moss and Lichen": "#fae6a0",
+}
+
+sentinel_image_viz_params = {
+    "bands": ["B4_median", "B3_median", "B2_median"],
+    "min": 0,
+    "max": 0.3,
+    "gamma": 1.4,
+}
+
+worldcover_visualization = {
+    "bands": ["Map"],
+}
+
+ceo_to_wc_lookup = {
+    "Trees_CanopyCover": "Trees",
+    "bush/scrub": "Shrubland",
+    "grass": "Grassland",
+    "cultivated vegetation": "Cropland",
+    "Water>lake/ponded/container": "Open Water",
+    "Water>rivers/stream": "Open Water",
+    "Water>irrigation ditch": "Open Water",
+    "Water>treated pool": "Open Water",
+    "Bare Ground": "Barren / Sparse Vegetation",
+    "Building": "Built-up",
+    "Impervious Surface (no building)": "Built-up",
+}
+
+
+def sentinel_cloud_mask(image):
+    qa = image.select("QA60")
+    cloudBit = 1 << 10
+    cirrusBit = 1 << 1
+
+    mask = qa.bitwiseAnd(cloudBit) and (qa.bitwiseAnd(cirrusBit).eq(0))
+
+    return image.updateMask(mask).divide(10000)
+
+
+def add_ee_layer(self, ee_object, vis_params, name):
+
+    try:
+        # display ee.Image()
+        if isinstance(ee_object, ee.image.Image):
+            map_id_dict = ee.Image(ee_object).getMapId(vis_params)
+            folium.raster_layers.TileLayer(
+                tiles=map_id_dict["tile_fetcher"].url_format,
+                attr="Google Earth Engine",
+                name=name,
+                overlay=True,
+                control=True,
+            ).add_to(self)
+        # display ee.ImageCollection()
+        elif isinstance(ee_object, ee.imagecollection.ImageCollection):
+            ee_object_new = ee_object.mosaic()
+            map_id_dict = ee.Image(ee_object_new).getMapId(vis_params)
+            folium.raster_layers.TileLayer(
+                tiles=map_id_dict["tile_fetcher"].url_format,
+                attr="Google Earth Engine",
+                name=name,
+                overlay=True,
+                control=True,
+            ).add_to(self)
+        # display ee.Geometry()
+        elif isinstance(ee_object, ee.geometry.Geometry):
+            folium.GeoJson(
+                data=ee_object.getInfo(), name=name, overlay=True, control=True
+            ).add_to(self)
+        # display ee.FeatureCollection()
+        elif isinstance(ee_object, ee.featurecollection.FeatureCollection):
+            ee_object_new = ee.Image().paint(ee_object, 0, 2)
+            map_id_dict = ee.Image(ee_object_new).getMapId(vis_params)
+            folium.raster_layers.TileLayer(
+                tiles=map_id_dict["tile_fetcher"].url_format,
+                attr="Google Earth Engine",
+                name=name,
+                overlay=True,
+                control=True,
+            ).add_to(self)
+
+    except Exception as e:
+        print("Could not display {}".format(name))
+        print(str(e))
+
+
+def ceo_harmonization(df):
+    df["CEO_BuiltUp"] = (
+        df["Land Cover Elements:Building"]
+        + df["Land Cover Elements:Impervious Surface (no building)"]
+    )
+    df["CEO_Trees"] = df["Land Cover Elements:Trees_CanopyCover"]
+    df["CEO_Shrubland"] = df["Land Cover Elements:bush/scrub"]
+    df["CEO_Grassland"] = df["Land Cover Elements:grass"]
+    df["CEO_Cropland"] = df["Land Cover Elements:cultivated vegetation"]
+    df["CEO_Water"] = (
+        df["Land Cover Elements:Water>treated pool"]
+        + df["Land Cover Elements:Water>rivers/stream"]
+        + df["Land Cover Elements:Water>irrigation ditch"]
+        + df["Land Cover Elements:Water>lake/ponded/container"]
+    )
+    df["CEO_Barren"] = df["Land Cover Elements:Bare Ground"]
+
 
 def aoi_plot(df, name, classifications, colors):
     plt.figure()
