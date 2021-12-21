@@ -1,5 +1,5 @@
-import seaborn as sns
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 harmonization_table = {
     "Trees": ["Trees", "CEO_Trees", "GO_Trees"],

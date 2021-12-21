@@ -20,9 +20,6 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         $CONDA/bin/conda env update --file script-environment.yml --name base
-    - name: Run Black
-      run: |
-        $CONDA/bin/black --check --diff ./
     - name: Run tests
       run: |
         $CONDA/bin/pytest -v -s utils/tests

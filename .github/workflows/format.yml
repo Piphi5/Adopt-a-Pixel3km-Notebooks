@@ -1,0 +1,29 @@
+name: Formatting
+
+on: [push, pull_request]
+
+jobs:
+  format:
+    name: Check Formatting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        pip install black
+        pip install isort
+        pip install mdformat
+        pip install nbqa
+    - name: Run Black
+      run: black --check --diff utils/.
+    - name: Run Black on Notebooks
+      run: nbqa black --check --diff ./
+    - name: Run isort
+      run: nbqa isort ./ --nbqa-diff
+    - name: Run MDFormat on Notebooks
+      run: nbqa mdformat ./ --nbqa-md --nbqa-diff
+      
