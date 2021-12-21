@@ -3,14 +3,13 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  test:
+  script-test:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        python-version: [3.6, 3.7, 3.8]
-    name: Test - ${{ matrix.os }}, ${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
+        python-version: [3.7, 3.8, 3.9]
+    name: Test Utilities - ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 
@@ -20,10 +19,34 @@ jobs:
     - name: Install dependencies
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda env update --file environment.yml --name base
+        $CONDA/bin/conda env update --file script-environment.yml --name base
     - name: Run Black
       run: |
         $CONDA/bin/black --check --diff ./
     - name: Run tests
       run: |
         $CONDA/bin/pytest -v -s utils/tests
+  notebook-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+        notebook-dir: [AOI Generation, CEO GO Join, CEO Post Processing, CEO Project Generation]
+    name: Test - ${{ matrix.notebook-dir }}, ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        $CONDA/bin/conda env update --file "${{ matrix.notebook-dir }}/environment.yml" --name base
+    - name: Install Pytest Dependencies
+      run: |
+        $CONDA/bin/pip install pytest
+        $CONDA/bin/pip install nbmake
+    - name: Run Pytest
+      run: $CONDA/bin/pytest -vv --nbmake "./${{ matrix.notebook-dir }}"

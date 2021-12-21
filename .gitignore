@@ -59,7 +59,3 @@ docs/source/changelog.md
 
 # Excessive csv files
 AOI Generation/*.csv
-
-# Files containing private information
-CEO Post Processing/CEO Point Data/*
-CEO Post Processing/CEO AOI Data/*

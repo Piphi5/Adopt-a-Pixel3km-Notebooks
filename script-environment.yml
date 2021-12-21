@@ -1,0 +1,9 @@
+name: testing-env
+channels:
+  - defaults
+dependencies:
+  - black
+  - pip:
+    - pytest
+    - haversine
+prefix: C:\Users\piphi\anaconda3\envs\testing-env
