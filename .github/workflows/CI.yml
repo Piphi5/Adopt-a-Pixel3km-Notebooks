@@ -28,6 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.7, 3.8, 3.9]
+        simulate-colab: [true, false]
         notebook-dir: [AOI Generation, CEO GO Join, CEO Post Processing, CEO Project Generation]
     name: Test - ${{ matrix.notebook-dir }}, ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -45,5 +46,30 @@ jobs:
       run: |
         $CONDA/bin/pip install pytest
         $CONDA/bin/pip install nbmake
+    - name: Run Pytest
+      run: $CONDA/bin/pytest -vv --nbmake "./${{ matrix.notebook-dir }}"
+  colab-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        notebook-dir: [AOI Generation, CEO GO Join, CEO Post Processing]
+    name: Colab Test - ${{ matrix.notebook-dir }}
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        $CONDA/bin/conda env update --file "${{ matrix.notebook-dir }}/environment.yml" --name base
+    - name: Install Pytest Dependencies
+      run: |
+        $CONDA/bin/pip install pytest
+        $CONDA/bin/pip install nbmake
+    - name: Set Mock Colab Environmental Variabe
+      run: $CONDA/bin/conda env config vars set MOCK_COLAB=true
     - name: Run Pytest
       run: $CONDA/bin/pytest -vv --nbmake "./${{ matrix.notebook-dir }}"
