@@ -4,7 +4,9 @@ channels:
 dependencies:
   - jupyterlab
   - pandas
+  - pip
   - pip:
+    - requests
     - branca==0.4.2
     - folium==0.12.1.post1
 prefix: C:\Users\piphi\anaconda3\envs\aoi-generation

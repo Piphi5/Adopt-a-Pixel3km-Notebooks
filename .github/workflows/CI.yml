@@ -12,42 +12,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 
-      uses: actions/setup-python@v2
+    - uses: conda-incubator/setup-miniconda@v2
       with:
+        auto-update-conda: true
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda env update --file script-environment.yml --name base
+      shell: bash -l {0}  
+      run: conda env update --file script-environment.yml --name test
     - name: Run tests
-      run: |
-        $CONDA/bin/pytest -v -s utils/tests
+      shell: bash -l {0}  
+      run: python -m pytest -v -s utils/tests
   notebook-test:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
-        simulate-colab: [true, false]
-        notebook-dir: [AOI Generation, CEO GO Join, CEO Post Processing, CEO Project Generation]
-    name: Test - ${{ matrix.notebook-dir }}, ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: [3.9]
+        notebook-dir: [AOI Generation, CEO Post Processing, CEO GO Join, CEO Project Generation]
+    name: Test - ${{ matrix.os }}, ${{ matrix.notebook-dir }}, ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 
-      uses: actions/setup-python@v2
+    - uses: conda-incubator/setup-miniconda@v2
       with:
+        auto-update-conda: true
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda env update --file "${{ matrix.notebook-dir }}/environment.yml" --name base
+      shell: bash -l {0}  
+      run:
+        conda env update --file "${{ matrix.notebook-dir }}/environment.yml" --name test
     - name: Install Pytest Dependencies
+      shell: bash -l {0}  
       run: |
-        $CONDA/bin/pip install pytest
-        $CONDA/bin/pip install nbmake
+        conda install -c anaconda pytest
+        conda install -c conda-forge nbmake
     - name: Run Pytest
-      run: $CONDA/bin/pytest -vv --nbmake "./${{ matrix.notebook-dir }}"
+      shell: bash -l {0}    
+      run: python -m pytest -vv --nbmake "./${{ matrix.notebook-dir }}"
   colab-test:
     strategy:
       fail-fast: false
@@ -57,19 +58,20 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 
-      uses: actions/setup-python@v2
+    - uses: conda-incubator/setup-miniconda@v2
       with:
+        auto-update-conda: true
         python-version: 3.7
     - name: Install dependencies
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda env update --file "${{ matrix.notebook-dir }}/environment.yml" --name base
+      run: conda env update --file "${{ matrix.notebook-dir }}/environment.yml" --name test
     - name: Install Pytest Dependencies
+      shell: bash -l {0}
       run: |
-        $CONDA/bin/pip install pytest
-        $CONDA/bin/pip install nbmake
+        conda install -c anaconda pytest
+        conda install -c conda-forge nbmake
     - name: Set Mock Colab Environmental Variabe
-      run: $CONDA/bin/conda env config vars set MOCK_COLAB=true
+      shell: bash -l {0}
+      run: conda env config vars set MOCK_COLAB=true
     - name: Run Pytest
-      run: $CONDA/bin/pytest -vv --nbmake "./${{ matrix.notebook-dir }}"
+      shell: bash -l {0}
+      run: python -m pytest -vv --nbmake "./${{ matrix.notebook-dir }}"
