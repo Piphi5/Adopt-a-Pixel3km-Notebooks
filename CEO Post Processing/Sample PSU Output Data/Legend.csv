@@ -1,0 +1,14 @@
+,LC_Type,HexCode
+0,Trees_CanopyCover,#007500
+1,bush/scrub,#DBED00
+2,grass,#00F100
+3,cultivated vegetation,#FF00D6
+4,Water>treated pool,#00F1DE
+5,Water>lake/ponded/container,#00B7F2
+6,Water>rivers/stream,#1527F6
+7,Water>irrigation ditch,#007570
+8,shadow,#000000
+9,unknown,#C8D2D3
+10,Bare Ground,#AA7941
+11,Building,#FF8080
+12,Impervious Surface (no building),#FF0000
