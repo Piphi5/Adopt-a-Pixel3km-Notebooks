@@ -162,16 +162,22 @@ def ceo_harmonization(df):
     df["CEO_Barren"] = df["Land Cover Elements:Bare Ground"]
 
 
-def aoi_plot(df, name, classifications, colors):
+def aoi_plot(df, name, classifications, colors, directory=""):
+    title = f"Mean Composition -- {name}"
+    filename = f"{title}.png"
+    if directory:
+        filename = f"{directory}/{filename}"
+
     plt.figure()
     mean = np.mean(df[classifications])
     patches, text, _ = plt.pie(mean, colors=colors, autopct="%.2f", pctdistance=1.1)
     plt.legend(patches, classifications, bbox_to_anchor=(1.15, 1), loc="upper left")
-    plt.title(f"Mean Composition -- {name}", fontweight="bold")
+    plt.title(title, fontweight="bold")
+    plt.savefig(filename)
     plt.show()
 
 
-def bar_comparison_plot(df, datasets):
+def bar_comparison_plot(df, datasets, directory=""):
     title = ""
     for dataset in datasets[:-1]:
         title += f"{dataset} vs. "
@@ -195,6 +201,8 @@ def bar_comparison_plot(df, datasets):
         axs[i].bar(datasets, np.mean(df[desired_columns]), color=color)
         axs[i].set_title(f"Mean {classification} Distribution")
         axs[i].title.set_weight("bold")
-
-    plt.savefig(f"{title} Bar Graph.png")
+    if directory:
+        plt.savefig(f"{directory}/{title} Bar Graph.png")
+    else:
+        plt.savefig(f"{title} Bar Graph.png")
     plt.show()
