@@ -1,8 +1,7 @@
 import pytest
+from haversine import Unit, haversine
 
-from haversine import haversine, Unit
 from utils.code.grid_constants import get_latlon_constants
-
 
 test_points = [
     (30.601389, -96.314445, 500),

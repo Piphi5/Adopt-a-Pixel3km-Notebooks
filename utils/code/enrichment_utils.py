@@ -1,6 +1,6 @@
 from collections import Counter
-import ee
 
+import ee
 import numpy as np
 
 wc_id_classification_map = {

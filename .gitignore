@@ -57,9 +57,8 @@ docs/source/changelog.md
 
 .jupyter_releaser_checkout
 
+# Random generated files
+.hypothesis/*
+
 # Excessive csv files
 AOI Generation/*.csv
-
-# Files containing private information
-CEO Post Processing/CEO Point Data/*
-CEO Post Processing/CEO AOI Data/*
