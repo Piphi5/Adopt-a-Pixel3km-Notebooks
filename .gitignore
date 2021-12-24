@@ -62,3 +62,6 @@ docs/source/changelog.md
 
 # Excessive csv files
 AOI Generation/*.csv
+
+# EE Testing JSON
+ee-credentials.json
