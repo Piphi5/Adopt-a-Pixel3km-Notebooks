@@ -25,7 +25,6 @@ ceo_to_worldcover_lookup = {
 }
 
 
-
 def ceo_harmonization(df):
     df["CEO_BuiltUp"] = (
         df["Land Cover Elements:Building"]

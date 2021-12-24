@@ -76,6 +76,7 @@ def print_job_statuses(task_list, verbose=False):
             print(f"-------------{num}-------------")
             print(status)
 
+
 def add_ee_layer(self, ee_object, vis_params, name):
 
     try:
@@ -120,6 +121,7 @@ def add_ee_layer(self, ee_object, vis_params, name):
     except Exception as e:
         print("Could not display {}".format(name))
         print(str(e))
+
 
 def sentinel_cloud_mask(image):
     qa = image.select("QA60")

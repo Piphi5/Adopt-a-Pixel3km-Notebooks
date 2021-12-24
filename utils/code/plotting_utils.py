@@ -50,6 +50,7 @@ worldcover_legend = {
     "Moss and Lichen": "#fae6a0",
 }
 
+
 def aoi_composition_plot(df, name, classifications, colors, directory=""):
     title = f"Mean Composition -- {name}"
     filename = f"{title}.png"
@@ -63,8 +64,11 @@ def aoi_composition_plot(df, name, classifications, colors, directory=""):
     plt.title(title, fontweight="bold")
     plt.savefig(filename)
     plt.show()
-  
-def dataset_comparison_plot(df, datasets, harmonization_table, harmonization_table_lookup, directory=""):
+
+
+def dataset_comparison_plot(
+    df, datasets, harmonization_table, harmonization_table_lookup, directory=""
+):
     title = ""
     for dataset in datasets[:-1]:
         title += f"{dataset} vs. "
