@@ -1,7 +1,7 @@
 import pytest
 from haversine import Unit, haversine
 
-from utils.code.grid_constants import get_latlon_constants
+from utils.code.aoi_grid_utils import get_latlon_spacing_constants
 
 test_points = [
     (30.601389, -96.314445, 500),
@@ -19,7 +19,7 @@ test_points = [
 
 @pytest.mark.parametrize("lat, lon, distance", test_points)
 def test_latlon_consts(lat, lon, distance):
-    lat_const, lon_const = get_latlon_constants(distance, lat)
+    lat_const, lon_const = get_latlon_spacing_constants(distance, lat)
     point = (lat, lon)
     west_point = (lat + lat_const, lon)
     north_point = (lat, lon + lon_const)

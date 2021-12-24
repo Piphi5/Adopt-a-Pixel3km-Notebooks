@@ -1,7 +1,7 @@
 import math
 
 
-def get_latlon_constants(grid_distance, latitude):
+def get_latlon_spacing_constants(grid_distance, latitude):
     # Calculate grid constants
     r_earth = 6.371 * 10 ** 6
 
