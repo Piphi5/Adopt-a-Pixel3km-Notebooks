@@ -7,6 +7,9 @@ dependencies:
   - earthengine-api=0.1.290
   - jupyterlab=3.2.4
   - python=3.9
+  - pandas
+  - matplotlib
+  - seaborn
   - selenium=3.141.0
   - scikit-learn=1.0.1
   - pip=21.2.4
