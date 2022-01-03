@@ -7,5 +7,5 @@ dependencies:
   - jupyterlab=3.2.4
   - pip=21.2.4
   - pip:
-    - go-utils==2021.61
+    - go-utils>=1.0.3
 prefix: C:\Users\piphi\anaconda3\envs\globe-ceo-join
