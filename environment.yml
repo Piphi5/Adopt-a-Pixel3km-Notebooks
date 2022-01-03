@@ -1,0 +1,25 @@
+name: aap-dev-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - earthengine-api=0.1.290
+  - geopandas=0.9.0
+  - jupyterlab=3.2.4
+  - python=3.9
+  - pandas
+  - matplotlib
+  - seaborn
+  - selenium=3.141.0
+  - scikit-learn=1.0.1
+  - pip
+  - pip:
+    - requests
+    - branca
+    - folium
+    - go-utils
+    - pillow
+    - pytest
+    - haversine
+    - webdriver-manager
+prefix: C:\Users\piphi\anaconda3\envs\aap-dev-env
